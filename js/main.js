@@ -11,11 +11,13 @@ let board, turn, winner;
 /*----- cached element references -----*/
 const msgEl = document.getElementById('msg');
 const markerEls = [...document.querySelectorAll('#markers > div')];
-console.log(markerEls)
+const replayBtn = document.querySelector('button');
 
 /*----- event listeners -----*/
 document.getElementById('markers')
   .addEventListener('click', handleDrop);
+
+replayBtn.addEventListener('click', init);
 
 /*----- functions -----*/
 init();
@@ -38,7 +40,28 @@ function handleDrop(evt) {
 }
 
 function getWinner() {
+  let winner = null;
+  for (let colIdx = 0; colIdx <= 6; colIdx++) {
+    winner = checkCol(colIdx);
+    if (winner) break;
+  }
+  // TODO: Add tie logic
+  return winner;
+}
 
+function checkCol(colIdx) {
+  const colArr = board[colIdx];
+  for (let rowIdx = 0; rowIdx < colArr.length; rowIdx++) {
+    let winner = checkUp(colArr, rowIdx);
+    if (winner) return winner;
+  }
+  return null;
+}
+
+function checkUp(colArr, rowIdx) {
+  // Boundary check
+  if (rowIdx > 2) return null;
+  
 }
 
 function init() {
@@ -79,4 +102,5 @@ function render() {
     // No winner yet, show whose turn
     msgEl.innerHTML = `<span style="color: ${colorLookup[turn]}">${colorLookup[turn].toUpperCase()}</span>'s Turn`;
   }
+  replayBtn.style.visibility = winner ? 'visible' : 'hidden';
 }

@@ -52,16 +52,46 @@ function getWinner() {
 function checkCol(colIdx) {
   const colArr = board[colIdx];
   for (let rowIdx = 0; rowIdx < colArr.length; rowIdx++) {
-    let winner = checkUp(colArr, rowIdx);
+    let winner = checkUp(colArr, rowIdx) || checkRight(colIdx, rowIdx)
+      || checkDiag(colIdx, rowIdx, 1) || checkDiag(colIdx, rowIdx, -1);
     if (winner) return winner;
   }
   return null;
 }
 
+function checkDiag(colIdx, rowIdx, dir) {
+  // Boundary check
+  if (dir > 0 && colIdx > 3 || dir > 0 && rowIdx > 2) return null;
+  if (dir < 0 && colIdx > 3 || dir < 0 && rowIdx < 3) return null;
+  const total = board[colIdx][rowIdx] + board[colIdx + 1][rowIdx + dir]
+    + board[colIdx + 2][rowIdx + dir * 2] + board[colIdx + 3][rowIdx + dir * 3];
+  if (Math.abs(total) === 4) {
+    return board[colIdx][rowIdx];
+  } else {
+    return null;
+  }
+}
+
+function checkRight(colIdx, rowIdx) {
+  // Boundary check
+  if (colIdx > 3) return null;
+  const total = board[colIdx][rowIdx] + board[colIdx + 1][rowIdx]
+    + board[colIdx + 2][rowIdx] + board[colIdx + 3][rowIdx];
+  if (Math.abs(total) === 4) {
+    return board[colIdx][rowIdx];
+  } else {
+    return null;
+  }
+}
+
 function checkUp(colArr, rowIdx) {
   // Boundary check
   if (rowIdx > 2) return null;
-  
+  if (Math.abs(colArr[rowIdx] + colArr[rowIdx + 1] + colArr[rowIdx + 2] + colArr[rowIdx + 3]) === 4) {
+    return colArr[rowIdx];
+  } else {
+    return null;
+  }
 }
 
 function init() {

@@ -2,7 +2,7 @@
 const PLAYER_COLORS = {
   'null': 'white',
   '1': 'purple',
-  '-1': 'orange'
+  '-1': 'lime'
 };
 
 /*----- state variables -----*/
